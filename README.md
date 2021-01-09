@@ -1,5 +1,6 @@
 # TextComprimator
 ## This is school project of text comprimate.
+<pre>
 Exam (CZ)
 Napište program, který bude komprimovat a dekomprimovat textové soubory. Komprese by měla fungovat tak, že vezme posloupnost stejných znaků za sebou a nahradí ji dvojicí obsahující počet znaků a daný znak.
 
@@ -36,3 +37,4 @@ b.zip: 17 65 2 66 1 67 (zobrazeny jsou zde jednotlivé byty oddělené mezerou)
 ./zipper -d -i b.zip -b -o a.txt
 b.zip: 17 65 2 66 1 67 (zobrazeny jsou zde jednotlivé byty oddělené mezerou)
 a.txt: AAAAAAAAAAAAAAAAABBC
+</pre>
