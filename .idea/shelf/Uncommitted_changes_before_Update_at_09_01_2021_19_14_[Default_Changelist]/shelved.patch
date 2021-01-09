@@ -1,0 +1,16 @@
+Index: cmake-build-debug/CMakeFiles/clion-log.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>C:\\Users\\User\\AppData\\Local\\JetBrains\\Toolbox\\apps\\CLion\\ch-0\\203.5981.166\\bin\\cmake\\win\\bin\\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G \"CodeBlocks - MinGW Makefiles\" C:\\Users\\User\\CLionProject\\text_Comprimator\r\n-- Configuring done\r\n-- Generating done\r\n-- Build files have been written to: C:/Users/User/CLionProject/text_Comprimator/cmake-build-debug\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/cmake-build-debug/CMakeFiles/clion-log.txt b/cmake-build-debug/CMakeFiles/clion-log.txt
+--- a/cmake-build-debug/CMakeFiles/clion-log.txt	(revision c9ee3e9051d9b956cdf676e670ebffea35e19bce)
++++ b/cmake-build-debug/CMakeFiles/clion-log.txt	(date 1610216068478)
+@@ -1,4 +1,1 @@
+-C:\Users\User\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\203.5981.166\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\User\CLionProject\text_Comprimator
+--- Configuring done
+--- Generating done
+--- Build files have been written to: C:/Users/User/CLionProject/text_Comprimator/cmake-build-debug
++Toolchains are not configured Configure Disable profile
