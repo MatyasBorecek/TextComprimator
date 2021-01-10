@@ -1,5 +1,5 @@
 # TextComprimator
-## This is school project of text comprimate.
+## This is school project of text compression.
 <pre>
 (CZ)
 Napište program, který bude komprimovat a dekomprimovat textové soubory. Komprese by měla fungovat tak, že vezme posloupnost stejných znaků za sebou a nahradí ji dvojicí obsahující počet znaků a daný znak.
