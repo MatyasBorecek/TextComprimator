@@ -12,6 +12,10 @@ unsigned int getCompressedLength(const char *text, size_t length);
 
 unsigned int getDeCompressedLength(const char *text, size_t length);
 
+char *binCompression(char *text);
+
+char *binDeCompression(const int *text, int length);
+
 int main(int argc, char *argv[]) {
 
     if (argc <= 1) {
@@ -53,8 +57,11 @@ int main(int argc, char *argv[]) {
     char *outputData = NULL;
 
     if (isBinary == 0) {
-        printf("%s\n",(char *)argv[inputPathIndex]);
         FILE *inputFile = fopen(argv[inputPathIndex], "r");
+        if (inputFile == NULL) {
+            fprintf(stderr, "Can not open file '%s'", argv[inputPathIndex]);
+            exit(1);
+        }
         fseek(inputFile, 0, SEEK_END);
         size_t fileLength = ftell(inputFile);
         rewind(inputFile);
@@ -62,7 +69,6 @@ int main(int argc, char *argv[]) {
         char *fileData = (char *) malloc(sizeof(char) * fileLength + 1);
         fileData[fileLength] = '\0';
         fread(fileData, sizeof(fileData), fileLength, inputFile);
-        printf("%d", fileLength);
         fclose(inputFile);
 
         outputData = (isCompressed == 0 ? compression(fileData) : deCompression(fileData));
@@ -70,21 +76,45 @@ int main(int argc, char *argv[]) {
         free(fileData);
 
     } else {
-        /*
-            Complete this else branch to finish project.
-         */
         FILE *inputFile = NULL;
-        if (isCompressed == 0) {
+        if (isCompressed == 1) {
             inputFile = fopen((char *) argv[inputPathIndex], "rb");
             fseek(inputFile, 0, SEEK_END);
             size_t fileLength = ftell(inputFile);
-            fseek(inputFile, 0, SEEK_SET);
+            rewind(inputFile);
 
             char *fileData = (char *) malloc(sizeof(char) * fileLength + 1);
             fileData[fileLength] = '\0';
             fread(fileData, sizeof(fileData), fileLength, inputFile);
-
             fclose(inputFile);
+
+            // This region of code is totally random, because I have problems with binary files.
+            // So I came up with this solution because I don't know how better to do this.
+            // I am ashamed because of it....
+            int numberCounter = 1, multiplier = 1, idx = 0;
+            for (int i = 0; i < fileLength; i++) {
+                if (fileData[i] == ' ')
+                    numberCounter++;
+            }
+            int *preData = (int *) calloc(numberCounter, sizeof(int));
+            for (int i = 0; i < fileLength; i++) {
+                if (fileData[i] != ' ') {
+                    preData[idx] += (int) fileData[i];
+                    if (multiplier > 1) {
+                        preData[idx] += 6;
+                    }
+                    multiplier++;
+                } else {
+                    multiplier = 1;
+                    idx++;
+                }
+            }
+
+            for (int i = 0; i < numberCounter; i++) {
+                preData[i] -= 48;
+            }
+
+            outputData = binDeCompression(preData, numberCounter);
 
         } else {
             inputFile = fopen((char *) argv[inputPathIndex], "r");
@@ -107,6 +137,25 @@ int main(int argc, char *argv[]) {
 
     getch();
     return 0;
+}
+
+char *binCompression(char *text) {
+    unsigned length = strlen(text), deCompressedLength = 0;
+    char prev = ' ';
+
+    for (int i = 0; i < length; i++) {
+        if (text[i] == ' ') {
+            continue;
+        }
+
+        if (text[i] != prev) {
+            prev = text[i];
+            deCompressedLength += 2;
+        }
+    }
+
+
+    return text;
 }
 
 char *compression(char *text) {
@@ -154,6 +203,31 @@ char *compression(char *text) {
         }
     }
     return compressionText;
+}
+
+char *binDeCompression(const int *text, int length) {
+    unsigned int deCompressedLength = 0;
+
+    for (int i = 0; i < length; i += 2) {
+        deCompressedLength += text[i];
+    }
+
+    char *deCompressedText = (char *) malloc((deCompressedLength + 1) * sizeof(char));
+    deCompressedText[deCompressedLength] = '\0';
+
+    int compareMe = text[0], idx = 0;
+    for (int i = 0; i < deCompressedLength; i++) {
+        if (i < compareMe) {
+            deCompressedText[i] = (char) text[idx + 1];
+        } else {
+            idx += 2;
+            if ((i + 2) <= deCompressedLength) {
+                compareMe += text[idx];
+                deCompressedText[i] = (char) text[idx + 1];
+            }
+        }
+    }
+    return deCompressedText;
 }
 
 char *deCompression(char *text) {
