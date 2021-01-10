@@ -14,7 +14,7 @@ unsigned int getDeCompressedLength(const char *text, size_t length);
 
 int main(int argc, char *argv[]) {
 
-    if (argc == 0) {
+    if (argc <= 1) {
         printf("You runs this program without arguments\n");
         printf("Try this: \n\t-i <input path>\n\t-o <output path>\n\t-b //binary files\n\t-d //decompression");
         getch();
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     int isBinary = 0, isCompressed = 0,
             inputPathIndex = 0, outputPathIndex = 0;
 
-    for (int i = 0; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
 
         /*
             I wanna use switch because I have 4 more types of arguments.
@@ -53,15 +53,16 @@ int main(int argc, char *argv[]) {
     char *outputData = NULL;
 
     if (isBinary == 0) {
+        printf("%s\n",(char *)argv[inputPathIndex]);
         FILE *inputFile = fopen(argv[inputPathIndex], "r");
         fseek(inputFile, 0, SEEK_END);
         size_t fileLength = ftell(inputFile);
-        fseek(inputFile, 0, SEEK_SET);
+        rewind(inputFile);
 
         char *fileData = (char *) malloc(sizeof(char) * fileLength + 1);
         fileData[fileLength] = '\0';
         fread(fileData, sizeof(fileData), fileLength, inputFile);
-
+        printf("%d", fileLength);
         fclose(inputFile);
 
         outputData = (isCompressed == 0 ? compression(fileData) : deCompression(fileData));
@@ -74,7 +75,7 @@ int main(int argc, char *argv[]) {
          */
         FILE *inputFile = NULL;
         if (isCompressed == 0) {
-            inputFile = fopen(argv[inputPathIndex], "rb");
+            inputFile = fopen((char *) argv[inputPathIndex], "rb");
             fseek(inputFile, 0, SEEK_END);
             size_t fileLength = ftell(inputFile);
             fseek(inputFile, 0, SEEK_SET);
@@ -86,7 +87,7 @@ int main(int argc, char *argv[]) {
             fclose(inputFile);
 
         } else {
-            inputFile = fopen(argv[inputPathIndex], "r");
+            inputFile = fopen((char *) argv[inputPathIndex], "r");
             fseek(inputFile, 0, SEEK_END);
             size_t fileLength = ftell(inputFile);
             fseek(inputFile, 0, SEEK_SET);
@@ -100,8 +101,8 @@ int main(int argc, char *argv[]) {
 
     }
 
-    FILE *outputFile = fopen(argv[outputPathIndex], "w+");
-    fprintf(outputFile, "%s", outputData);
+    FILE *outputFile = fopen((char *) argv[outputPathIndex], "w+");
+    fwrite(outputData, strlen(outputData) + 1, 1, outputFile);
     fclose(outputFile);
 
     getch();
